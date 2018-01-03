@@ -7,18 +7,29 @@ class Crawler:
     """
     Superclass for all crawler.
     """
-    @classmethod
-    def __new__(cls, self, code, options=dict()):
-        soup = cls.fetch(cls.preprocess(code))
-        return cls.extract(soup, options)
+    normal_options = {
+        "mode": "xml"
+    }
 
     @classmethod
-    def fetch(cls, source):
+    def __new__(cls, self, code, options=normal_options):
+        processed_codes = cls.preprocess(code, options)
+        soups = cls.fetch(processed_codes, options)
+        return cls.extract(soups, options)
+
+    @classmethod
+    def fetch(cls, sources, options):
         """
         Fetch XML / HTML code from source feed.
+        TODO Clarify prerequisites for lxml
         """
-        # TODO Clarify prerequisites for lxml
-        return BeautifulSoup(requests.get(source, headers=config.req_header).text, "lxml")
+        ret = list()
+        for source in sources:
+            resp = requests.get(source, headers=config.req_header)
+            if options["mode"] == "xml": ret.append(BeautifulSoup(resp.text))
+            elif options["mode"] == "json": ret.append(resp.json())
+            elif options["mode"] == "raw": ret.append(resp)
+        return ret
 
     @classmethod
     def clean_html(cls, raw_html):

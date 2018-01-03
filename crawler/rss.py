@@ -8,18 +8,20 @@ class RSSCrawler(Crawler):
     Fetch RSS Feeds and restruct to news format dictionary.
     """
     @classmethod
-    def preprocess(cls, source):
+    def preprocess(cls, source, options):
         """
         Preprocess source to proper URL string.
+        Returns list of urls to fetch.
         """
-        return RSSConfig.links[source]
+        return [RSSConfig.links[source]]
     
     @classmethod
-    def extract(cls, soup, options):
+    def extract(cls, objs, options):
         """
         Extract news from BeautifulSoup object.
         """
         # TODO Optimize to each newspaper style
+        soup = objs[0]
         ret = list()
         for entry in soup.findAll("entry"):
             temp = dict()
