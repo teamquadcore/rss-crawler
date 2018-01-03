@@ -1,34 +1,25 @@
 import requests
 from bs4 import BeautifulSoup
-from config import RSSConfig
+from crawler import Crawler
+from crawler.config import RSSConfig
 
-class RSSCrawler:
+class RSSCrawler(Crawler):
     """
     Fetch RSS Feeds and restruct to news format dictionary.
     """
-    config = RSSConfig()
-
     @classmethod
-    def get(cls, newspaper):
+    def preprocess(cls, source):
         """
-        Run whole crawl and parse process.
+        Preprocess source to proper URL string.
         """
-        soup = __fetch(cls.config.links[newspaper])
-        return __extract(soup, newspaper)
-
+        return RSSConfig.links[source]
+    
     @classmethod
-    def __fetch(cls, rss):
-        """
-        Fetch XML code from RSS feed.
-        """
-        # TODO Clarify prerequisites for lxml
-        return BeautifulSoup(requests.get(rss, headers=cls.config.req_header).text, "lxml")
-
-    @classmethod
-    def __extract(cls, soup, newspaper):
+    def extract(cls, soup, options):
         """
         Extract news from BeautifulSoup object.
         """
+        # TODO Optimize to each newspaper style
         ret = list()
         for entry in soup.findAll("entry"):
             temp = dict()
@@ -41,18 +32,8 @@ class RSSCrawler:
                 elif item.name == "author":
                     temp["author"] = item.get_text().strip()
                 elif item.name == "content":
-                    #temp["content"] = clean_html(item.get_text()).strip()
                     temp["content"] = item.get_text().strip()
                 else: 
                     temp[item.name] = item.string
             ret.append(temp)
         return ret
-    
-    @classmethod
-    def __clean_html(cls, raw_html):
-        """
-        Utility function for replace HTML tags from string.
-        """
-        cleanr = re.compile('<.*?>')
-        clean_text = re.sub(cleanr, '', raw_html)
-        return clean_text
