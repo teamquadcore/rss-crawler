@@ -27,7 +27,8 @@ class Crawler:
         ret = list()
         for source in sources:
             resp = requests.get(source, headers=config.req_header)
-            if options["mode"] == "xml": ret.append(BeautifulSoup(resp.text))
+            if options["mode"] == "xml": ret.append(BeautifulSoup(resp.text.replace("<![CDATA[", "").replace("]]>", ""), "xml"))
+            elif options["mode"] == "html": ret.append(BeautifulSoup(resp.text.replace("<![CDATA[", "").replace("]]>", ""), "lxml"))
             elif options["mode"] == "json": ret.append(resp.json())
             elif options["mode"] == "raw": ret.append(resp)
         return ret

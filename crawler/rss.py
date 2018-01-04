@@ -28,7 +28,7 @@ class RSSCrawler(Crawler):
             temp = dict()
             temp["category"] = list()
             for item in entry.children:
-                if item.name == None: 
+                if item.name == None:   
                     continue
                 elif item.name == RSSConfig.item_publish[code]:
                     continue
@@ -36,7 +36,12 @@ class RSSCrawler(Crawler):
                     temp[item.name] = item.string
                 elif item.name == RSSConfig.item_content[code]:
                     temp["content"] = item.get_text().strip()
-                
+                elif item.name == "link":
+                    # Separate with and without href attribute 
+                    if "href" in item:
+                        temp["link"] = item["href"]
+                    else:
+                        temp[item.name] = item.string
                 elif item.name == RSSConfig.item_author[code]:
                     temp["author"] = item.get_text().strip()
                 elif item.name == "category":

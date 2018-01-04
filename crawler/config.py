@@ -35,10 +35,10 @@ class RSSConfig:
         "LifeHacker" : "description",
         "Wired" : "description"
     }
-    
+
     item_author = {
         "The Verge": "author",
-        "Engadget" : "dc:creator",
-        "LifeHacker" : "dc:creator",
-        "Wired" : "dc:creator"
+        "Engadget" : "creator",
+        "LifeHacker" : "creator",
+        "Wired" : "creator"
     }
