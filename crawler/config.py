@@ -9,7 +9,7 @@ class RSSConfig:
     links = {
         "The Verge": "https://www.theverge.com/rss/index.xml",
         "Engadget": "https://www.engadget.com/rss.xml",
-        "Life Hacker": "https://lifehacker.com/rss",
+        "LifeHacker": "https://lifehacker.com/rss",
         "Wired": "https://www.wired.com/feed/rss",
         # Feedburner based XML Feed, need to be careful
         "TechCrunch": "http://feeds.feedburner.com/TechCrunch/"
