@@ -9,6 +9,16 @@ class RSSConfig:
     links = {
         "The Verge": "https://www.theverge.com/rss/index.xml",
         "Engadget": "https://www.engadget.com/rss.xml",
-        # Feedburner based XML Feed, need to be careful
+        "LifeHacker": "https://lifehacker.com/rss",
+        "Wired": "https://www.wired.com/feed/rss",
+        # TODO(@ethkim): Fix the XML feed consumption to prevent breaking from browser-friendly style codes
         "TechCrunch": "http://feeds.feedburner.com/TechCrunch/"
+    }
+
+    # Positional ordered: name, publish, content, author
+    properties = {
+        "The Verge": ("entry", "published", "content", "author"),
+        "Engadget": ("item", "pubDate", "description", "creator"),
+        "LifeHacker": ("item", "pubDate", "description", "creator"),
+        "Wired": ("item", "pubDate", "description", "creator")
     }
