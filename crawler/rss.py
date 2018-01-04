@@ -1,48 +1,50 @@
 import requests
 from bs4 import BeautifulSoup
 from crawler import Crawler
-from crawler.config import RSSConfig
+from crawler.config import RSSConfig as conf
 
 class RSSCrawler(Crawler):
     """
     Fetch RSS Feeds and restruct to news format dictionary.
     """
+
     @classmethod
     def preprocess(cls, source, options):
         """
         Preprocess source to proper URL string.
         Returns list of urls to fetch.
         """
-        return [RSSConfig.links[source]]
+        return [conf.links[source]]
     
     @classmethod
     def extract(cls, objs, code, options):
         """
         Extract news from BeautifulSoup object.
+        # TODO Need to extract needless texts from content like 'Read more'
         """
-        # TODO Optimize to each newspaper style
+        # constant numbers for property index
+        ITEM_NAME = 0
+        ITEM_PUBLISH = 1
+        ITEM_CONTENT = 2
+        ITEM_AUTHOR = 3
+        
         soup = objs[0]
         ret = list()      
 
-        for entry in soup.findAll(RSSConfig.item_name[code]):
+        for entry in soup.findAll(conf.properties[code][ITEM_NAME]):
             article = dict()
             article["category"] = list()
             for item in entry.children:
-                if item.name == None:   
-                    continue
-                elif item.name == RSSConfig.item_publish[code]:
+                if item.name == None or item.name == conf.properties[code][ITEM_NAME]:
                     continue
                 elif item.name == "title":
                     article[item.name] = item.string
-                elif item.name == RSSConfig.item_content[code]:
+                elif item.name == conf.properties[code][ITEM_CONTENT]:
                     article["content"] = item.get_text().strip()
                 elif item.name == "link":
-                    # Separate with and without href attribute 
-                    if "href" in item:
-                        article["link"] = item["href"]
-                    else:
-                        article[item.name] = item.string
-                elif item.name == RSSConfig.item_author[code]:
+                    # Use "href" attribute if available
+                    article["link"] = (item["href"] if (item.get("href") != None) else item.string)
+                elif item.name == conf.properties[code][ITEM_AUTHOR]:
                     article["author"] = item.get_text().strip()
                 elif item.name == "category":
                     article["category"].append(item.string)

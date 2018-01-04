@@ -13,10 +13,9 @@ class Crawler:
 
     @classmethod
     def __new__(cls, self, code, options=normal_options):
-        
         processed_codes = cls.preprocess(code, options)
-        soups = cls.fetch(processed_codes, options)
-        return cls.extract(soups, code, options)
+        data_objects = cls.fetch(processed_codes, options)
+        return cls.extract(data_objects, code, options)
 
     @classmethod
     def fetch(cls, sources, options):
@@ -24,14 +23,19 @@ class Crawler:
         Fetch XML / HTML code from source feed.
         TODO Clarify prerequisites for lxml
         """
-        ret = list()
+        data_objects = list()
         for source in sources:
             resp = requests.get(source, headers=config.req_header)
-            if options["mode"] == "xml": ret.append(BeautifulSoup(resp.text.replace("<![CDATA[", "").replace("]]>", ""), "xml"))
-            elif options["mode"] == "html": ret.append(BeautifulSoup(resp.text.replace("<![CDATA[", "").replace("]]>", ""), "lxml"))
-            elif options["mode"] == "json": ret.append(resp.json())
-            elif options["mode"] == "raw": ret.append(resp)
-        return ret
+            if options["mode"] == "xml": 
+                xml_result = resp.text.replace("<![CDATA[", "").replace("]]>", "")
+                data_objects.append(BeautifulSoup(xml_result, "xml"))
+            elif options["mode"] == "html": 
+                data_objects.append(BeautifulSoup(resp.text, "lxml"))
+            elif options["mode"] == "json": 
+                data_objects.append(resp.json())
+            elif options["mode"] == "raw": 
+                data_objects.append(resp)
+        return data_objects
 
     @classmethod
     def clean_html(cls, raw_html):

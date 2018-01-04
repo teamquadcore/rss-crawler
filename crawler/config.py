@@ -11,34 +11,14 @@ class RSSConfig:
         "Engadget": "https://www.engadget.com/rss.xml",
         "LifeHacker": "https://lifehacker.com/rss",
         "Wired": "https://www.wired.com/feed/rss",
-        # Feedburner based XML Feed, need to be careful
+        # TODO(@ethkim): Fix the XML feed consumption to prevent breaking from browser-friendly style codes
         "TechCrunch": "http://feeds.feedburner.com/TechCrunch/"
     }
 
-    item_name = {
-        "The Verge": "entry",
-        "Engadget" : "item",
-        "LifeHacker" : "item",
-        "Wired" : "item"
-    }
-
-    item_publish = {
-        "The Verge": "published",
-        "Engadget" : "pubDate",
-        "LifeHacker" : "pubDate",
-        "Wired" : "pubDate"
-    }
-
-    item_content = {
-        "The Verge": "content",
-        "Engadget" : "description",
-        "LifeHacker" : "description",
-        "Wired" : "description"
-    }
-
-    item_author = {
-        "The Verge": "author",
-        "Engadget" : "creator",
-        "LifeHacker" : "creator",
-        "Wired" : "creator"
+    # Positional ordered: name, publish, content, author
+    properties = {
+        "The Verge": ("entry", "published", "content", "author"),
+        "Engadget": ("item", "pubDate", "description", "creator"),
+        "LifeHacker": ("item", "pubDate", "description", "creator"),
+        "Wired": ("item", "pubDate", "description", "creator")
     }
