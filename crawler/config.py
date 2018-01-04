@@ -9,6 +9,36 @@ class RSSConfig:
     links = {
         "The Verge": "https://www.theverge.com/rss/index.xml",
         "Engadget": "https://www.engadget.com/rss.xml",
+        "Life Hacker": "https://lifehacker.com/rss",
+        "Wired": "https://www.wired.com/feed/rss",
         # Feedburner based XML Feed, need to be careful
         "TechCrunch": "http://feeds.feedburner.com/TechCrunch/"
+    }
+
+    item_name = {
+        "The Verge": "entry",
+        "Engadget" : "item",
+        "LifeHacker" : "item",
+        "Wired" : "item"
+    }
+
+    item_publish = {
+        "The Verge": "published",
+        "Engadget" : "pubDate",
+        "LifeHacker" : "pubDate",
+        "Wired" : "pubDate"
+    }
+
+    item_content = {
+        "The Verge": "content",
+        "Engadget" : "description",
+        "LifeHacker" : "description",
+        "Wired" : "description"
+    }
+    
+    item_author = {
+        "The Verge": "author",
+        "Engadget" : "dc:creator",
+        "LifeHacker" : "dc:creator",
+        "Wired" : "dc:creator"
     }

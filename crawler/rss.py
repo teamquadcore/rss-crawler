@@ -16,26 +16,32 @@ class RSSCrawler(Crawler):
         return [RSSConfig.links[source]]
     
     @classmethod
-    def extract(cls, objs, options):
+    def extract(cls, objs, code, options):
         """
         Extract news from BeautifulSoup object.
         """
         # TODO Optimize to each newspaper style
         soup = objs[0]
-        ret = list()
-        for entry in soup.findAll("entry"):
+        ret = list()      
+
+        for entry in soup.findAll(RSSConfig.item_name[code]):
             temp = dict()
+            temp["category"] = list()
             for item in entry.children:
-                # print(item.name)
                 if item.name == None: 
                     continue
-                elif item.name == "link":
-                    temp["link"] = item["href"]
-                elif item.name == "author":
-                    temp["author"] = item.get_text().strip()
-                elif item.name == "content":
-                    temp["content"] = item.get_text().strip()
-                else: 
+                elif item.name == RSSConfig.item_publish[code]:
+                    continue
+                elif item.name == "title":
                     temp[item.name] = item.string
+                elif item.name == RSSConfig.item_content[code]:
+                    temp["content"] = item.get_text().strip()
+                
+                elif item.name == RSSConfig.item_author[code]:
+                    temp["author"] = item.get_text().strip()
+                elif item.name == "category":
+                    temp["category"].append(item.string)
+                else: 
+                    continue
             ret.append(temp)
         return ret

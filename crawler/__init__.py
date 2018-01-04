@@ -13,9 +13,10 @@ class Crawler:
 
     @classmethod
     def __new__(cls, self, code, options=normal_options):
+        
         processed_codes = cls.preprocess(code, options)
         soups = cls.fetch(processed_codes, options)
-        return cls.extract(soups, options)
+        return cls.extract(soups, code, options)
 
     @classmethod
     def fetch(cls, sources, options):
