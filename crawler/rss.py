@@ -36,6 +36,7 @@ class RSSCrawler(Crawler):
         for entry in soup.findAll(conf.properties[code][ITEM_NAME]):
             article = dict()
             article["category"] = list()
+            article["keywords"] = list()
             for item in entry.children:
                 if item.name == None: 
                     continue
@@ -51,7 +52,9 @@ class RSSCrawler(Crawler):
                 elif item.name == conf.properties[code][ITEM_AUTHOR]:
                     article["author"] = item.get_text().strip()
                 elif item.name == "category":
-                    article["category"].append(item.string)
+                    article[item.name].append(item.string)
+                elif item.name == "keywords":
+                    article[item.name].append(item.string)
                 else: 
                     continue
             ret.append(article)
@@ -60,13 +63,10 @@ class RSSCrawler(Crawler):
     @classmethod
     def parse_date(cls, date_string):
         new_date = parser.parse(date_string)
-        new_date_string = str(new_date)      
-               
+        new_date_string = str(new_date) 
         return new_date_string
 
     @classmethod
     def parse_content(cls, content_string):
         new_content_string = content_string.split("Read more...")[0]
-
-
         return new_content_string
