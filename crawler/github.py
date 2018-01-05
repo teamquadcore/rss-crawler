@@ -26,7 +26,7 @@ class GithubCrawler(Crawler):
         ]
     
     @classmethod
-    def extract(cls, objs, options):
+    def extract(cls, objs, code, options):
         """
         Extract news from BeautifulSoup object.
         """
