@@ -12,7 +12,7 @@ class RSSConfig:
         "LifeHacker": "https://lifehacker.com/rss",
         "Wired": "https://www.wired.com/feed/rss",
         # TODO(@ethkim): Fix the XML feed consumption to prevent breaking from browser-friendly style codes
-        "TechCrunch": "http://feeds.feedburner.com/TechCrunch/"
+        # "TechCrunch": "http://feeds.feedburner.com/TechCrunch/"
     }
 
     # Positional ordered: name, publish, content, author
