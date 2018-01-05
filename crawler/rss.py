@@ -22,7 +22,7 @@ class RSSCrawler(Crawler):
     def extract(cls, objs, code, options):
         """
         Extract news from BeautifulSoup object.
-        # TODO Need to extract needless texts from content like 'Read more'
+        # TODO Need to remove needless texts from content like 'Read more'
         """
         # constant numbers for property index
         ITEM_NAME = 0
@@ -31,7 +31,7 @@ class RSSCrawler(Crawler):
         ITEM_AUTHOR = 3
         
         soup = objs[0]
-        ret = list()      
+        ret = list() 
 
         for entry in soup.findAll(conf.properties[code][ITEM_NAME]):
             article = dict()
@@ -48,7 +48,9 @@ class RSSCrawler(Crawler):
                     article["content"] = cls.parse_content(item.get_text().strip())
                 elif item.name == "link":
                     # Use "href" attribute if available
-                    article["link"] = (item["href"] if (item.get("href") != None) else item.string)
+                    article["link"] = (item["href"] 
+                    if (item.get("href") != None) 
+                    else item.string)
                 elif item.name == conf.properties[code][ITEM_AUTHOR]:
                     article["author"] = item.get_text().strip()
                 elif item.name == "category":
@@ -62,11 +64,18 @@ class RSSCrawler(Crawler):
 
     @classmethod
     def parse_date(cls, date_string):
+        """
+        Unify date in different format of each news in the
+        same format.
+        """
         new_date = parser.parse(date_string)
         new_date_string = str(new_date) 
         return new_date_string
 
     @classmethod
     def parse_content(cls, content_string):
+        """
+        Remove needless texts from content.
+        """
         new_content_string = content_string.split("Read more...")[0]
         return new_content_string

@@ -11,10 +11,13 @@ class RSSConfig:
         "Engadget": "https://www.engadget.com/rss.xml",
         "LifeHacker": "https://lifehacker.com/rss",
         "Wired": "https://www.wired.com/feed/rss",
-        # TODO(@ethkim): Fix the XML feed consumption to prevent breaking from browser-friendly style codes
+        # TODO(@achaccha): Fix the XML feed consumption 
+        # to prevent breaking from browser-friendly style codes
         "TechCrunch": "http://feeds.feedburner.com/TechCrunch/"
     }
 
+    # Each item in the following list contains the name of sections 
+    # for which we extract content.
     # Positional ordered: name, publish, content, author
     properties = {
         "The Verge": ("entry", "published", "content", "author"),
