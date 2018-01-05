@@ -11,9 +11,6 @@ class RSSConfig:
         "Engadget": "https://www.engadget.com/rss.xml",
         "LifeHacker": "https://lifehacker.com/rss",
         "Wired": "https://www.wired.com/feed/rss",
-        # TODO(@achaccha): Fix the XML feed consumption 
-        # to prevent breaking from browser-friendly style codes
-        "TechCrunch": "http://feeds.feedburner.com/TechCrunch/"
     }
 
     # Each item in the following list contains the name of sections 

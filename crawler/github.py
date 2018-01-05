@@ -10,7 +10,7 @@ class GithubCrawler(Crawler):
     def __new__(cls, self, code, options={"mode": "json"}):
         processed_codes = cls.preprocess(code, options)
         soups = cls.fetch(processed_codes, options)
-        return cls.extract(soups, options)
+        return cls.extract(soups, code, options)
 
     @classmethod
     def preprocess(cls, source, options):
