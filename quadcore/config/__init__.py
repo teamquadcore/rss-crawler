@@ -22,7 +22,7 @@ class Config:
     }
 
     # Positional ordered: name, publish, content, author
-    rss_props = {
+    rss_factors = {
         "The Verge": ("entry", "published", "content", "author"),
         "Engadget": ("item", "pubDate", "description", "creator"),
         "LifeHacker": ("item", "pubDate", "description", "creator"),

@@ -10,7 +10,7 @@ class TestRSSCrawler(unittest.TestCase):
     """
     def setUp(self):
         self.feed_list = Config.rss_links.keys()
-        self.props = Config.rss_props
+        self.props = Config.rss_factors
 
     def test_links_are_available(self):
         """

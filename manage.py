@@ -10,7 +10,7 @@ import unittest
 manager = Manager()
 
 @manager.command
-def test(category):
+def run_manual(category):
     """
     Run the manual test codes for developers.
     """
