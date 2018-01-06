@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from crawler import config
-from crawler.config import RSSConfig
+from quadcore.config import Config
 
 class Crawler:
     """
@@ -25,7 +24,7 @@ class Crawler:
         """
         data_objects = list()
         for source in sources:
-            resp = requests.get(source, headers=config.req_header)
+            resp = requests.get(source, headers=Config.req_header)
             if options["mode"] == "xml": 
                 xml_result = resp.text.replace("<![CDATA[", "").replace("]]>", "")
                 data_objects.append(BeautifulSoup(xml_result, "xml"))

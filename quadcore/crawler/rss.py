@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-from crawler import Crawler
-from crawler.config import RSSConfig as conf
+from quadcore.crawler import Crawler
+from quadcore.config import Config as conf
 
 class RSSCrawler(Crawler):
     """
@@ -14,7 +14,7 @@ class RSSCrawler(Crawler):
         Preprocess source to proper URL string.
         Returns list of urls to fetch.
         """
-        return [conf.links[source]]
+        return [conf.rss_links[source]]
     
     @classmethod
     def extract(cls, objs, code, options):
@@ -31,20 +31,20 @@ class RSSCrawler(Crawler):
         soup = objs[0]
         ret = list()      
 
-        for entry in soup.findAll(conf.properties[code][ITEM_NAME]):
+        for entry in soup.findAll(conf.rss_props[code][ITEM_NAME]):
             article = dict()
             article["category"] = list()
             for item in entry.children:
-                if item.name == None or item.name == conf.properties[code][ITEM_NAME]:
+                if item.name == None or item.name == conf.rss_props[code][ITEM_NAME]:
                     continue
                 elif item.name == "title":
                     article[item.name] = item.string
-                elif item.name == conf.properties[code][ITEM_CONTENT]:
+                elif item.name == conf.rss_props[code][ITEM_CONTENT]:
                     article["content"] = item.get_text().strip()
                 elif item.name == "link":
                     # Use "href" attribute if available
                     article["link"] = (item["href"] if (item.get("href") != None) else item.string)
-                elif item.name == conf.properties[code][ITEM_AUTHOR]:
+                elif item.name == conf.rss_props[code][ITEM_AUTHOR]:
                     article["author"] = item.get_text().strip()
                 elif item.name == "category":
                     article["category"].append(item.string)
