@@ -2,8 +2,8 @@ import requests
 from datetime import datetime
 from dateutil import parser
 from bs4 import BeautifulSoup
-from crawler import Crawler
-from crawler.config import RSSConfig as conf
+from quadcore.crawler import Crawler
+from quadcore.config import Config as conf
 
 class RSSCrawler(Crawler):
     """
@@ -16,7 +16,7 @@ class RSSCrawler(Crawler):
         Preprocess source to proper URL string.
         Returns list of urls to fetch.
         """
-        return [conf.links[source]]
+        return [conf.rss_links[source]]
     
     @classmethod
     def extract(cls, objs, code, options):
@@ -33,25 +33,25 @@ class RSSCrawler(Crawler):
         soup = objs[0]
         ret = list() 
 
-        for entry in soup.findAll(conf.properties[code][ITEM_NAME]):
+        for entry in soup.findAll(conf.rss_factors[code][ITEM_NAME]):
             article = dict()
             article["category"] = list()
             article["keywords"] = list()
             for item in entry.children:
                 if item.name == None: 
                     continue
-                elif item.name == conf.properties[code][ITEM_PUBLISH]:
+                elif item.name == conf.rss_factors[code][ITEM_PUBLISH]:
                     article["publish_date"] = cls.parse_date(item.string)
                 elif item.name == "title":
                     article[item.name] = item.string
-                elif item.name == conf.properties[code][ITEM_CONTENT]:
+                elif item.name == conf.rss_factors[code][ITEM_CONTENT]:
                     article["content"] = cls.parse_content(item.get_text().strip())
                 elif item.name == "link":
                     # Use "href" attribute if available
                     article["link"] = (item["href"] 
                     if (item.get("href") != None) 
                     else item.string)
-                elif item.name == conf.properties[code][ITEM_AUTHOR]:
+                elif item.name == conf.rss_factors[code][ITEM_AUTHOR]:
                     article["author"] = item.get_text().strip()
                 elif item.name == "category":
                     article[item.name].append(item.string)

@@ -1,7 +1,6 @@
-from crawler import config
-from crawler.rss import RSSCrawler
-from crawler.github import GithubCrawler
-from crawler.config import RSSConfig as rss_conf
+from quadcore.config import Config
+from quadcore.crawler.rss import RSSCrawler
+from quadcore.crawler.github import GithubCrawler
 import unittest
 import requests
 
@@ -10,8 +9,8 @@ class TestRSSCrawler(unittest.TestCase):
     Testcase for RSSCrawler.
     """
     def setUp(self):
-        self.feed_list = rss_conf.links.keys()
-        self.props = rss_conf.properties
+        self.feed_list = Config.rss_links.keys()
+        self.props = Config.rss_factors
 
     def test_links_are_available(self):
         """
@@ -19,7 +18,7 @@ class TestRSSCrawler(unittest.TestCase):
         This test passes when all rss feed links are available.
         """
         for newspaper in self.feed_list:
-            response = requests.get(rss_conf.links[newspaper], headers=config.req_header)
+            response = requests.get(Config.rss_links[newspaper], headers=Config.req_header)
             response.raise_for_status()
     
     def test_rss_crawl(self):
@@ -48,6 +47,3 @@ class TestGitHubCrawler(unittest.TestCase):
         )
         self.assertTrue(type(profile["repos"]) == type(list()))
         self.assertTrue(len(profile["repos"]) >= 1)
-
-if __name__ == '__main__':
-    unittest.main()

@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from crawler import Crawler
+from quadcore.crawler import Crawler
 
 class GithubCrawler(Crawler):
     """
