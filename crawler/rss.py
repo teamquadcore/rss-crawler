@@ -76,6 +76,8 @@ class RSSCrawler(Crawler):
     def parse_content(cls, content_string):
         """
         Remove needless texts from content.
+        TODO(@achaccha): Detect needless text
         """
+        
         new_content_string = content_string.split("Read more...")[0]
         return new_content_string
