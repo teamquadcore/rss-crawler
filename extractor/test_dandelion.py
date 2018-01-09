@@ -4,6 +4,7 @@
 import requests
 import json
  
+# TODO(@achaccha): Move this to .env 
 TOKEN = '0af76af32cb343a19f7c7ea0e153922e'
  
 ENTITY_URL = 'https://api.dandelion.eu/datatxt/nex/v1'
@@ -29,6 +30,6 @@ if __name__ == '__main__':
     query = "Trump has a son called Donald Trump and Donald Trump has a father named Trump."
     response = get_entities(query)
     print_entities(response)
-    print(json.dumps(response, indent=4))
+   #print(json.dumps(response, indent=4))
     
 
