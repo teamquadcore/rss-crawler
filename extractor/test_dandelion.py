@@ -29,6 +29,6 @@ if __name__ == '__main__':
     query = "Trump has a son called Donald Trump and Donald Trump has a father named Trump."
     response = get_entities(query)
     print_entities(response)
-    #print(json.dumps(response, indent=4))
+    print(json.dumps(response, indent=4))
     
 
