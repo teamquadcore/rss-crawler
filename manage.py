@@ -6,19 +6,19 @@ import unittest
 
 manager = Manager()
 
+manual_test_pair = {
+    "rss": ManualTest.rss,
+    "github": ManualTest.github,
+    "data": ManualTest.data
+}
+
 @manager.command
 def run_manual(category):
     """
     Run the manual test codes for developers.
     """
-    if category == "rss":
-        ManualTest.rss()
-    elif category == "github":
-        ManualTest.github()
-    elif category == "linkedin":
-        print("[-] Not supported yet!")
-    elif category == "data":
-        ManualTest.data()
+    if category in manual_test_pair:
+        manual_test_pair[category]()
     else:
         print("[-] No methods available.")
 

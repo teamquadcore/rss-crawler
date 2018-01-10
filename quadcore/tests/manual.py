@@ -8,6 +8,7 @@ class ManualTest:
     """
     Static class for manual test method definition.
     """
+
     @classmethod
     def rss(cls):
         """

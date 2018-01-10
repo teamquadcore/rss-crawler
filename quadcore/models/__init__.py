@@ -65,7 +65,7 @@ class Article:
             "author": self.author,
             # Due to redis hash structure, 
             # only string will be accepted
-            "category": json.dumps(self.category)
+            "category": json.dumps(self.category),
             "entities": json.dumps(self.entities)
         }
 
