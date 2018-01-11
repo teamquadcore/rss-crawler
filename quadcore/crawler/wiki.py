@@ -59,6 +59,6 @@ class WikipediaCrawler(Crawler):
         Parse article id form Wikipedia.
         """
         resp = requests.get(link).text
-        comment_part = resp[resp.index("enwiki:pcache:idhash:") + 21:]
-        return comment_part[0:comment_part.index("-")]
+        comment_part = resp[resp.index("\"wgArticleId\":") + 14:]
+        return comment_part[0:comment_part.index(",")]
     
