@@ -1,7 +1,7 @@
 import requests
 import json
-from bs4 import BeautifulSoup, Tag, NavigableString   # XML(HTML)을 파싱
-from crawler import Crawler
+from bs4 import BeautifulSoup, Tag, NavigableString   
+from quadcore.crawler import Crawler
 
 class WikipediaCrawler(Crawler):
     """
