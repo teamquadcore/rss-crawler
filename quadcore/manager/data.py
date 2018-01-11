@@ -35,7 +35,7 @@ class DataManager:
         new_key = "entity:" + str(entity_count + 1)
 
         # Set key to Entity
-        entity.entity_id = new_key
+        entity.entity_key = new_key
 
         # Execute HMSET for assigning hash structure
         result = cls.db.hmset(new_key, entity.extract())

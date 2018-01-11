@@ -76,7 +76,7 @@ class Entity:
     STATE_NOT_INDEXED = 0
     STATE_INDEXED = 1
 
-    def __init__(self, entity_id, title, articles=list()):
+    def __init__(self, entity_id, title, entity_key=None, articles=list()):
         if len(articles) == 0:
             self.state = Entity.STATE_NOT_INDEXED
         else:
@@ -84,6 +84,7 @@ class Entity:
 
         # String and Numbers
         self.entity_id = entity_id
+        self.entity_key = entity_key
         self.title = title
 
         # Lists
