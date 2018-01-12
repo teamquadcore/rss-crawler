@@ -17,7 +17,7 @@ class ManualTest:
         # TODO prevent from unappropriate input
         newspaper = input("[+] Newspaper name: ")
         rss_result = RSSCrawler(newspaper)
-        print(json.dumps(rss_result, indent=4))
+        #print(json.dumps(rss_result, indent=4))
 
     @classmethod
     def github(cls):

@@ -35,13 +35,17 @@ class RSSCrawler(Crawler):
 
         for entry in soup.findAll(conf.rss_factors[code][ITEM_NAME]):
             article = dict()
+            article["article_key"] = None
             article["category"] = list()
             article["keywords"] = list()
+            article["entities"] = list()
+            article["newspaper"] = code
             for item in entry.children:
                 if item.name == None: 
                     continue
                 elif item.name == conf.rss_factors[code][ITEM_PUBLISH]:
-                    article["publish_date"] = cls.parse_date(item.string)
+                    print(item)
+                    article["published"] = cls.parse_date(item.string)
                 elif item.name == "title":
                     article[item.name] = item.string
                 elif item.name == conf.rss_factors[code][ITEM_CONTENT]:

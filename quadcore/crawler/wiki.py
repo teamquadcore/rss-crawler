@@ -1,7 +1,7 @@
 import requests
 import json
-from bs4 import BeautifulSoup, Tag, NavigableString   # XML(HTML)을 파싱
-from crawler import Crawler
+from bs4 import BeautifulSoup, Tag, NavigableString   
+from quadcore.crawler import Crawler
 
 class WikipediaCrawler(Crawler):
     """
@@ -18,14 +18,10 @@ class WikipediaCrawler(Crawler):
         """
         Preprocess source to proper URL string.
         """
-        wikipedia_num = 1
         wiki_url = list()
-        for i in range(1, 2):    
-            wikipedia_str = str(wikipedia_num)
-            wiki_url.append("https://tools.wmflabs.org/enwp10/cgi-bin/list2.fcgi?run=yes&projecta=Computing&limit=1000&offset=%s&sorta=Article+title&sortb=Quality" %wikipedia_str)
-            wikipedia_num += 2
-
-        return wiki_url   
+        offset = 1 + (1000 * (int(options["range"]) - 1))
+        wiki_url.append("https://tools.wmflabs.org/enwp10/cgi-bin/list2.fcgi?run=yes&projecta=Computing&limit=1000&offset=%d&sorta=Article+title&sortb=Quality" % offset)
+        return wiki_url
     
     @classmethod
     def extract(cls, objs, code, options):
@@ -48,16 +44,21 @@ class WikipediaCrawler(Crawler):
                     if type(i) == Tag and flag == 0:
                         for link in i.findAll('a'):
                             wiki_title = link.string
+                            wiki_id = cls.parse_article_id(link["href"]).strip()
                             # We need first attribute 'a'
                             flag = 1
                             break
-
-                        for j in i.attrs:
-                            if i.attrs[j][0] == "resultnum":
-                                wiki_id = i.string
-
-                        extract_entity[wiki_id] = wiki_title
+                        if wiki_id != str():
+                            extract_entity[wiki_id] = wiki_title
 
         return extract_entity
 
+    @classmethod
+    def parse_article_id(cls, link):
+        """
+        Parse article id form Wikipedia.
+        """
+        resp = requests.get(link).text
+        comment_part = resp[resp.index("\"wgArticleId\":") + 14:]
+        return comment_part[0:comment_part.index(",")]
     

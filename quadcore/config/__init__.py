@@ -13,6 +13,10 @@ class Config:
         "db": os.environ.get("REDIS_DB_NUMBER")
     }
 
+    # Dandelion API
+    dandelion_url = 'https://api.dandelion.eu/datatxt/nex/v1'
+    dandelion_token = os.environ.get("DANDELION_TOKEN")
+
     # RSS feed links
     rss_links = {
         "The Verge": "https://www.theverge.com/rss/index.xml",
