@@ -7,11 +7,11 @@ class ArticleExtractor(Extractor):
         Preprocess obj to significant {key:value}
         Returns list of urls to fetch.
         """
-        entity_dict = {}
+        entity_dict = dict()
         key_num = 1
         for article_num in obj:
             for key in article_num:
-                entity_dict[key_num] = article_num.get("content")   
+                entity_dict[key_num] = article_num.get("link")   
                 key_num += 1
 
         return entity_dict

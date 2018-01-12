@@ -1,5 +1,6 @@
 from quadcore.manager.db import DBManager
 from quadcore.models import Article, Entity
+import json
 
 class DataManager:
     db = DBManager.get_redis()
@@ -44,6 +45,32 @@ class DataManager:
         if result:
             cls.set_entity_count(entity_count + 1)
         return result
+
+    @classmethod
+    def update_entity_by_article(cls, article):
+        """
+        Update each entity's articles list based on article.
+        """
+        for entity in article.entities:
+            # Get entity index from redis
+            entity_index = cls.db.hget("entity_map", str(entity))
+            if entity_index == None: continue
+
+            # Generate entity key and fetch
+            entity_key = "entity:" + entity_index
+            given_entity = cls.get_entity_by_key(entity_index)
+
+            # Update articles list
+            if given_entity != None:
+                given_entity.articles.append(article.article_key.replace("article:", ""))
+                result = cls.db.hset(entity_key, "articles", json.dumps(given_entity.articles))
+
+    @classmethod
+    def is_article_duplicate(cls, article):
+        """
+        Make sure new article is not duplicated.
+        """
+        return cls.db.hkeys("article_map").count(article.link) != 0
 
     @classmethod
     def get_entity_by_article(cls, article):
@@ -91,7 +118,7 @@ class DataManager:
         """
         db_key = "entity:" + str(key)
         result = cls.db.hgetall(db_key)
-        return (result if type(result) is dict else None)
+        return (Entity.build(result) if type(result) is dict else None)
     
     @classmethod
     def get_key_by_entity(cls, entity):
@@ -111,7 +138,7 @@ class DataManager:
         """
         db_key = "article:" + str(key)
         result = cls.db.hgetall(db_key)
-        return (result if type(result) is dict else None)
+        return (Article.build(result) if type(result) is dict else None)
 
     @classmethod
     def get_entity_count(cls):
