@@ -1,5 +1,4 @@
 from quadcore.crawler.rss import RSSCrawler
-from quadcore.crawler.github import GithubCrawler
 from quadcore.manager.data import DataManager as dm
 import json
 import sys
@@ -17,17 +16,6 @@ class ManualTest:
         # TODO prevent from unappropriate input
         newspaper = input("[+] Newspaper name: ")
         rss_result = RSSCrawler(newspaper)
-        #print(json.dumps(rss_result, indent=4))
-
-    @classmethod
-    def github(cls):
-        """
-        GitHub crawling test for developers.
-        """
-        # TODO prevent from fake username
-        username = input("[+] GitHub Username: ")
-        github_result = GithubCrawler(username)
-        print(json.dumps(github_result, indent=4))
 
     @classmethod
     def data(cls):

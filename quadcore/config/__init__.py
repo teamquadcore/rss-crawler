@@ -17,6 +17,9 @@ class Config:
     dandelion_url = 'https://api.dandelion.eu/datatxt/nex/v1'
     dandelion_token = os.environ.get("DANDELION_TOKEN")
 
+    # Wiki Url
+    wiki_url = "https://tools.wmflabs.org/enwp10/cgi-bin/list2.fcgi?run=yes&projecta=%s&limit=1000&offset=%d&sorta=Article+title&sortb=Quality"
+
     # RSS feed links
     rss_links = {
         "The Verge": "https://www.theverge.com/rss/index.xml",
@@ -38,3 +41,16 @@ class Config:
     req_header = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36'
     }
+   
+    # Wiki category
+    wiki_category = [
+        "Computing",
+        "Company",
+        "Computer_Security",
+        "Computer_Vision",
+        "Computer_animation",
+        "Computer_graphics",
+        "Computer_hardware",
+        "Computer_networking",
+        "Computer_science"
+    ]

@@ -1,7 +1,8 @@
+import feedparser
+import json
 import requests
-from datetime import datetime
-from dateutil import parser
-from bs4 import BeautifulSoup
+import time
+
 from quadcore.crawler import Crawler
 from quadcore.config import Config as conf
 
@@ -21,67 +22,26 @@ class RSSCrawler(Crawler):
     @classmethod
     def extract(cls, objs, code, options):
         """
-        Extract news from BeautifulSoup object.
+        Extract news from feedparser object.
         # TODO Need to remove needless texts from content like 'Read more'
         """
-        # constant numbers for property index
-        ITEM_NAME = 0
-        ITEM_PUBLISH = 1
-        ITEM_CONTENT = 2
-        ITEM_AUTHOR = 3
-        
-        soup = objs[0]
+        feed = objs[0]
         ret = list() 
-
-        for entry in soup.findAll(conf.rss_factors[code][ITEM_NAME]):
+        for entry in feed.entries:
             article = dict()
-            article["article_key"] = None
-            article["category"] = list()
-            article["keywords"] = list()
-            article["entities"] = list()
+            article["article_key"] = None 
+            article["title"] = entry.get('title', 'No title')
             article["newspaper"] = code
-            for item in entry.children:
-                if item.name == None: 
-                    continue
-                elif item.name == conf.rss_factors[code][ITEM_PUBLISH]:
-                    print(item)
-                    article["published"] = cls.parse_date(item.string)
-                elif item.name == "title":
-                    article[item.name] = item.string
-                elif item.name == conf.rss_factors[code][ITEM_CONTENT]:
-                    article["content"] = cls.parse_content(item.get_text().strip())
-                elif item.name == "link":
-                    # Use "href" attribute if available
-                    article["link"] = (item["href"] 
-                    if (item.get("href") != None) 
-                    else item.string)
-                elif item.name == conf.rss_factors[code][ITEM_AUTHOR]:
-                    article["author"] = item.get_text().strip()
-                elif item.name == "category":
-                    article[item.name].append(item.string)
-                elif item.name == "keywords":
-                    article[item.name].append(item.string)
-                else: 
-                    continue
+            article["link"] = entry.get('link', 'No link')
+            article["published"] = time.strftime("%Y-%m-%dT%H:%M:%S", entry.get("published_parsed", time.gmtime()))
+            article["content"] = entry.get('description', 'No content')
+            article["author"] = entry.get('author', 'No author')
+            if "tags" in entry:
+                article["category"] = [i["term"] for i in entry.tags]
+            else:
+                article["category"] = list()
+            article["entities"] = list()
+
             ret.append(article)
+        print(json.dumps(ret, indent=4))
         return ret
-
-    @classmethod
-    def parse_date(cls, date_string):
-        """
-        Unify date in different format of each news in the
-        same format.
-        """
-        new_date = parser.parse(date_string)
-        new_date_string = str(new_date) 
-        return new_date_string
-
-    @classmethod
-    def parse_content(cls, content_string):
-        """
-        Remove needless texts from content.
-        TODO(@achaccha): Detect needless text
-        """
-        
-        new_content_string = content_string.split("Read more...")[0]
-        return new_content_string
