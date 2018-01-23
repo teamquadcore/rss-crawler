@@ -58,35 +58,20 @@ def crawl_article():
     Run the article crawler for all newspapers.
     """
     db = DBManager.get_redis()
+    slack_alert("*News Crawling* started!\n")
 
     # TODO(@harrydrippin): Crawl for all newspapers after enough tokens, keying newspapers by some ID
-    newspaper = "The Verge"
-    articles = RSSCrawler(newspaper)   
+    for newspaper in Config.rss_links:
+        articles = RSSCrawler(newspaper)
 
-    ''' 
-    for article in articles:
-        article = Article.build(article)
-        
-        if not dm.is_article_duplicate(article):
-            dm.set_article(article)
-            db.hset("article_map", article.link, "1")
-    '''
-    '''
-    entity_data = ArticleExtractor(articles)
-    
-    for article, link in zip(articles, entity_data.keys()):
-        article = Article.build(article)
+        for article in articles:
+            article = Article.build(article)
 
-        if not dm.is_article_duplicate(article):
-            article.entities = list(set(entity_data[link]))
+            if not dm.is_article_duplicate(article):
+                dm.set_article(article)
+                db.hset("article_map", article.link, "1")
 
-            # Set articles to redis
-            dm.set_article(article)
-            dm.update_entity_by_article(article)
-
-            # Duplication mark
-            #db.hset("article_map", article.link, "1")
-    '''    
+    slack_alert("*News Crawling* finished!\n")   
 
 @manager.command
 def crawl_entity(crawling_category):
@@ -115,8 +100,6 @@ def crawl_entity(crawling_category):
         count += 1
     end = time.time()
     spend = end - start
-    
-    #slack_alert("All jobs are done! Spent " + str(spent) + " min.\n> Requested: *" + str(crawling_range) + "*")
     
 if __name__ == '__main__':
     manager.main()

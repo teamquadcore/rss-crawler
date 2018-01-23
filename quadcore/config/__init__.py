@@ -22,18 +22,34 @@ class Config:
 
     # RSS feed links
     rss_links = {
-        "The Verge": "https://www.theverge.com/rss/index.xml",
+        "ArsTechnica": "http://feeds.arstechnica.com/arstechnica/technology-lab",
+        "Barron’s": "http://blogs.barrons.com/techtraderdaily/feed/",
+        "BBCNews": "http://feeds.bbci.co.uk/news/technology/rss.xml",
+        "BusinessInsider": "http://feeds.feedburner.com/typepad/alleyinsider/silicon_alley_insider",
+        "CNET": "http://www.cnet.com/rss/news",
+        "Computerworld": "http://www.computerworld.com/index.rss",
+        "DailyExpress": "http://feeds.feedburner.com/daily-express-tech",
         "Engadget": "https://www.engadget.com/rss.xml",
+        "FreeTechnologyforTeachers": "http://feeds.feedblitz.com/freetech4teachers",
+        "HowToGeek": "http://feeds.howtogeek.com/HowToGeek",
+        "HuffingtonPost": "http://www.huffingtonpost.com/feeds/verticals/technology/index.xml",
         "LifeHacker": "https://lifehacker.com/rss",
-        "Wired": "https://www.wired.com/feed/rss"
-    }
-
-    # Positional ordered: name, publish, content, author
-    rss_factors = {
-        "The Verge": ("entry", "published", "content", "author"),
-        "Engadget": ("item", "pubDate", "description", "creator"),
-        "LifeHacker": ("item", "pubDate", "description", "creator"),
-        "Wired": ("item", "pubDate", "description", "creator")
+        "LosAngelesTimes": "http://www.latimes.com/business/technology/rss2.0.xml",
+        "MakeUseOf": "http://feeds.feedburner.com/Makeuseof",
+        "Mirror": "http://www.mirror.co.uk/tech/rss.xml",
+        "MITTechnologyReview": "https://www.technologyreview.com/topnews.rss",
+        "ReadWrite: Smart Cities": "http://feeds.feedburner.com/SmartCitiesReadwrite",
+        "Recode": "http://www.recode.net/rss/index.xml",
+        "Reddit": "http://www.reddit.com/r/technology/.rss",
+        "Reuters": "http://feeds.reuters.com/reuters/technologyNews",
+        "Techmeme": "https://www.techmeme.com/feed.xml",
+        "TechCrunch": "http://feeds.feedburner.com/TechCrunch",
+        "TheAtlantic": "http://www.theatlantic.com/feed/channel/technology",
+        "TheNewYorkTimes": "http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
+        "TheWashingtonPost": "http://feeds.washingtonpost.com/rss/business/technology",
+        "TheVerge": "https://www.theverge.com/rss/index.xml",
+        "VentureBeat": "http://feeds.feedburner.com/venturebeat/SZYF",        
+        "Wired": "https://www.wired.com/feed/rss"        
     }
 
     # Header information for yielding User-Agent validation
