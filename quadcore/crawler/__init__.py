@@ -1,5 +1,6 @@
+import feedparser
 import requests
-from bs4 import BeautifulSoup
+
 from quadcore.config import Config
 
 class Crawler:
@@ -7,7 +8,7 @@ class Crawler:
     Superclass for all crawler.
     """
     normal_options = {
-        "mode": "xml"
+        "mode": "feed"
     }
 
     @classmethod
@@ -25,9 +26,8 @@ class Crawler:
         data_objects = list()
         for source in sources:
             resp = requests.get(source, headers=Config.req_header)
-            if options["mode"] == "xml": 
-                xml_result = resp.text.replace("<![CDATA[", "").replace("]]>", "")
-                data_objects.append(BeautifulSoup(xml_result, "xml"))
+            if options["mode"] == "feed": 
+                data_objects.append(feedparser.parse(resp.text))
             elif options["mode"] == "html": 
                 data_objects.append(BeautifulSoup(resp.text, "lxml"))
             elif options["mode"] == "json": 
