@@ -24,7 +24,7 @@ class WikipediaCrawler(Crawler):
         for entry in items:
             for item in entry.children:
                 if type(item) == Tag and item.name == "b":
-                    if "Total" in item.text:            
+                    if "Total" in item.text:           
                         wiki_range = int(int(item.text[15:]) / 1000 + 1)
         
         return wiki_range
@@ -38,9 +38,9 @@ class WikipediaCrawler(Crawler):
         wiki_range = cls.get_range(options["category"])
         category = options["category"]
 
-        for i in range(1, wiki_range):
-            offset = 1 + (1000 * (i - 1))            
-            wiki_url.append(Config.wiki_url %(category, offset))
+        for i in range(1, wiki_range+1):
+            offset = 1 + (1000 * (i - 1))         
+            wiki_url.append(Config.wiki_url %(category, offset))       
         
         return wiki_url
     

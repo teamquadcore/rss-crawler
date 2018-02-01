@@ -6,7 +6,7 @@ class DBManager:
 
     @classmethod
     def __init_redis(cls):
-        cls.__redis_store = redis.StrictRedis(host=Config.redis["host"], port=Config.redis["port"], db=0, charset="utf-8", decode_responses=True)
+        cls.__redis_store = redis.StrictRedis(host=Config.redis["host"], port=Config.redis["port"], password=Config.redis["password"], db=0, charset="utf-8", decode_responses=True)
     
     @classmethod
     def get_redis(cls):

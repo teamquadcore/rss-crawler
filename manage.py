@@ -3,13 +3,14 @@ from manager import Manager
 from quadcore.crawler.rss import RSSCrawler
 from quadcore.crawler.wiki import WikipediaCrawler
 from quadcore.config import Config
-from quadcore.extractor.article import ArticleExtractor
+from quadcore.extractor import Extractor
 from quadcore.manager.data import DataManager as dm
 from quadcore.manager.db import DBManager
 from quadcore.models import Article 
 from quadcore.models import Entity
 from quadcore.tests.manual import ManualTest
 
+import ast
 import json
 import os
 import quadcore.tests
@@ -63,7 +64,7 @@ def crawl_article():
     # TODO(@harrydrippin): Crawl for all newspapers after enough tokens, keying newspapers by some ID
     for newspaper in Config.rss_links:
         articles = RSSCrawler(newspaper)
-
+        
         for article in articles:
             article = Article.build(article)
 
@@ -71,7 +72,24 @@ def crawl_article():
                 dm.set_article(article)
                 db.hset("article_map", article.link, "1")
 
-    slack_alert("*News Crawling* finished!\n")   
+    slack_alert("*News Crawling* finished!\n")
+
+@manager.command
+def reconnect_article():
+    """
+    Delete article_map and create new article_map
+    """
+    db = DBManager.get_redis()
+    article_count = dm.get_article_count()
+    for key in range(1, article_count+1):
+        article_link = dm.get_article_by_key(str(key)).link
+        db.hdel("article_map", article_link)
+
+    for key in range(1, article_count+1):
+        article_link = dm.get_article_by_key(str(key)).link
+        db.hset("article_map", article_link, "1")
+    
+
 
 @manager.command
 def crawl_entity(crawling_category):
@@ -92,14 +110,31 @@ def crawl_entity(crawling_category):
     
     start = time.time()
     count = 1
+    
     for key in wiki_crawl_result.keys():
         if count % 50 == 0:
             print("[+] " + str(count) + "th data is processing...")
         item_value = wiki_crawl_result[key]
         dm.set_entity(Entity(int(key), item_value))
-        count += 1
-    end = time.time()
-    spend = end - start
+        count += 1 
+    spend = time.time() - start
+
+    slack_alert("Inserting was done.\n> spend {time} min.".format(time=(spend / 60)))
     
+
+@manager.command
+def extract_article():
+    db = DBManager.get_redis()
+
+    article_count = dm.get_article_count()
+    link_list = list()
+    key = 570
+    #for key in range(1, article_count + 1):
+    #if key % 50 == 0: print("[+] " + str(key) + "th data is processing...")
+    article = dm.get_article_by_key(key)    
+    if article != None:
+        article_entity = Extractor(article)
+    
+
 if __name__ == '__main__':
     manager.main()

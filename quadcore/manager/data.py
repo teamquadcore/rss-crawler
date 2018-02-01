@@ -47,6 +47,16 @@ class DataManager:
         return result
 
     @classmethod
+    def update_article(cls, article):
+        """
+        Update article
+        """
+        # article을 통해 db에서 찾는다.
+        article_key = cls.db.hgetall(article.article_key)["article_key"]
+        # 찾은 article의 entity에 article의 entity를 넣는다. 
+        result = cls.db.hset(article_key, "entities", json.dumps(article.entities))
+
+    @classmethod
     def update_entity_by_article(cls, article):
         """
         Update each entity's articles list based on article.
