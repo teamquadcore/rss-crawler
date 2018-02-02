@@ -49,11 +49,11 @@ class DataManager:
     @classmethod
     def update_article(cls, article):
         """
-        Update article
+        Insert entities to article.
         """
-        # article을 통해 db에서 찾는다.
+        # Get article key from redis
         article_key = cls.db.hgetall(article.article_key)["article_key"]
-        # 찾은 article의 entity에 article의 entity를 넣는다. 
+        # Update article
         result = cls.db.hset(article_key, "entities", json.dumps(article.entities))
 
     @classmethod
@@ -179,3 +179,44 @@ class DataManager:
         NOTE: this attribute should be increased automatically.
         """
         return cls.db.set("article_count", count)
+
+    @classmethod
+    def delete_article(cls, key):
+        """
+        Delete a certain article.
+        """
+        article_key = "article:" + str(key)
+        hashmap = db.delete(article_key)
+
+    @classmethod
+    def delete_entity(cls, key):
+        """
+        Delete a certain entity.
+        """
+        entity_key = "entity:" + str(key)
+        hashmap = db.delete(entity_key)
+    
+    @classmethod
+    def delete_all_article(cls):
+        """
+        Delete all articles.
+        """
+        article_count = int(db.get("article_count"))
+
+        for key in range(1, article_count + 1): 
+            if key % 10 == 0: print(str(key) + "/" + str(article_count) + " 번째 데이터 처리 중")
+            article_key = "article:" + str(key)
+            hashmap = db.delete(article_key)
+
+    @classmethod
+    def delete_all_entity(cls):
+        """
+        Delete all entities.
+        """
+        entity_count = int(db.get("entity_count"))
+
+        for key in range(1, entity_count + 1): 
+            if key % 10 == 0: print(str(key) + "/" + str(entity_count) + " 번째 데이터 처리 중")
+            entity_key = "entity:" + str(key)
+            hashmap = db.delete(entity_key)
+        

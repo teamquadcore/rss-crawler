@@ -14,8 +14,6 @@ class Extractor:
     def __new__(cls, self, obj):
         category_list = cls.get_entities(obj)
         cls.article_entity_relation(obj, category_list)
-        #print(category_objects)
-        #return category_objects
 
     @classmethod
     def get_entities(cls, obj, confidence=0.1, lang='en'):
@@ -29,8 +27,7 @@ class Extractor:
         }
         response = requests.get(Config.dandelion_url, params=payload)
         category_list = cls.get_category_list(response.json())
-        '''
-        
+        '''        
         return category_list
 
     # Get category list

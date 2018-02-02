@@ -41,9 +41,22 @@ def run_manual(category):
         print("[-] No methods available.")
 
 @manager.command
+def map_articles():
+    """
+    Create article map.
+    """
+    db = DBManager.get_redis()
+
+    article_count = dm.get_article_count()
+    for key in range(1, article_count + 1):
+        if key % 50 == 0: print("[+] " + str(key) + "th data is processing...")
+        article = dm.get_article_by_key(key)
+        db.hset("article_map", article_link, "1")
+
+@manager.command
 def map_entities():
     """
-    Run the article crawler for all newspapers.
+    Create entity map.
     """
     db = DBManager.get_redis()
 
@@ -51,7 +64,7 @@ def map_entities():
     for key in range(1, entity_count + 1):
         if key % 50 == 0: print("[+] " + str(key) + "th data is processing...")
         entity = dm.get_entity_by_key(key)
-        #db.hset("entity_map", entity.entity_id, key)
+        db.hset("entity_map", entity.entity_id, key)
 
 @manager.command
 def crawl_article():
@@ -73,23 +86,6 @@ def crawl_article():
                 db.hset("article_map", article.link, "1")
 
     slack_alert("*News Crawling* finished!\n")
-
-@manager.command
-def reconnect_article():
-    """
-    Delete article_map and create new article_map
-    """
-    db = DBManager.get_redis()
-    article_count = dm.get_article_count()
-    for key in range(1, article_count+1):
-        article_link = dm.get_article_by_key(str(key)).link
-        db.hdel("article_map", article_link)
-
-    for key in range(1, article_count+1):
-        article_link = dm.get_article_by_key(str(key)).link
-        db.hset("article_map", article_link, "1")
-    
-
 
 @manager.command
 def crawl_entity(crawling_category):
@@ -128,12 +124,42 @@ def extract_article():
 
     article_count = dm.get_article_count()
     link_list = list()
-    key = 570
-    #for key in range(1, article_count + 1):
-    #if key % 50 == 0: print("[+] " + str(key) + "th data is processing...")
-    article = dm.get_article_by_key(key)    
-    if article != None:
-        article_entity = Extractor(article)
+    print(article_count)
+    '''
+    for key in range(1, article_count + 1):
+        if key % 50 == 0: print("[+] " + str(key) + "th data is processing...")
+        article = dm.get_article_by_key(key)    
+        if article != None:
+            article_entity = Extractor(article)
+    '''
+
+@manager.command
+def reconnect_article():
+    """
+    Delete article_map and create new article_map.
+    """
+    db = DBManager.get_redis()
+    article_count = dm.get_article_count()
+    
+    db.delete("article_map")
+
+    for key in range(1, article_count+1):
+        article_link = dm.get_article_by_key(str(key)).link
+        db.hset("article_map", article_link, "1")
+
+@manager.command
+def reconnect_entity():
+    """
+    Delete entity_map and create new entity_map.
+    """
+    db = DBManager.get_redis()
+    entity_count = dm.get_entity_count()
+    
+    db.delete("entity_map")
+
+    for key in range(1, article_count+1):
+        article_link = dm.get_article_by_key(str(key)).link
+        db.hset("article_map", article_link, "1")
     
 
 if __name__ == '__main__':
