@@ -120,18 +120,27 @@ def crawl_entity(crawling_category):
 
 @manager.command
 def extract_article():
+    """
+    Extract entity from article and two-way relationship between articles and entities.
+    """
     db = DBManager.get_redis()
 
-    article_count = dm.get_article_count()
-    link_list = list()
-    print(article_count)
-    '''
-    for key in range(1, article_count + 1):
-        if key % 50 == 0: print("[+] " + str(key) + "th data is processing...")
-        article = dm.get_article_by_key(key)    
-        if article != None:
-            article_entity = Extractor(article)
-    '''
+    article_count = dm.get_article_count()    
+    token_list = Config.dandelion_token.split("#")
+    key = 1
+    whos = 0
+    
+    for token in token_list:
+        remain_token = int(dm.remain_token(token))
+        for i in range(1, int(remain_token/2)+1):
+            print(Config.dandelion_who[whos] + ": " + str(key) + "th data is processing...")
+            article = dm.get_article_by_key(key)               
+            if article != None:
+                article_entity = Extractor(article, token)
+            if article_count == key:
+                return
+            key += 1 
+        whos += 1 
 
 @manager.command
 def reconnect_article():
@@ -157,10 +166,37 @@ def reconnect_entity():
     
     db.delete("entity_map")
 
-    for key in range(1, article_count+1):
-        article_link = dm.get_article_by_key(str(key)).link
-        db.hset("article_map", article_link, "1")
-    
+    for key in range(1, entity_count+1):
+        entity = dm.get_entity_by_key(key)
+        db.hset("entity_map", entity.entity_id, key)
+
+@manager.command
+def disconnect_article():
+    """
+    Remove entities in article.
+    """
+    db = DBManager.get_redis()
+    article_count = dm.get_article_count()
+
+    print("[+] Article->Entity remove a connetion")
+    for i in range(1, article_count + 1): 
+        if i % 10 == 0: print(str(i) + "/" + str(article_count) + " 번째 데이터 처리 중")
+        article_key = "article:" + str(i)
+        hashmap = db.hset(article_key, "entities", "[]")
+
+@manager.command
+def disconnect_entity():
+    """
+    Remove articles in entity.
+    """
+    db = DBManager.get_redis()
+    entity_count = dm.get_entity_count()
+
+    print("[+] Entity->Article remove a connetion")
+    for i in range(1, entity_count + 1): 
+        if i % 50 == 0: print(str(i) + "/" + str(entity_count) + " 번째 데이터 처리 중")
+        entity_key = "entity:" + str(i)
+        hashmap = db.hset(entity_key, "articles", "[]")
 
 if __name__ == '__main__':
     manager.main()

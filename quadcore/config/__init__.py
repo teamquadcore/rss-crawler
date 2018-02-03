@@ -16,6 +16,7 @@ class Config:
     # Dandelion API
     dandelion_url = 'https://api.dandelion.eu/datatxt/nex/v1'
     dandelion_token = os.environ.get("DANDELION_TOKEN")
+    dandelion_who = ["Henry", "Zoey", "Roy", "Harry"]
 
     # Wiki Url
     wiki_url = "https://tools.wmflabs.org/enwp10/cgi-bin/list2.fcgi?run=yes&projecta=%s&limit=1000&offset=%d&sorta=Article+title&sortb=Quality"

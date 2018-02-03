@@ -1,6 +1,9 @@
+from quadcore.config import Config
 from quadcore.manager.db import DBManager
 from quadcore.models import Article, Entity
+
 import json
+import requests
 
 class DataManager:
     db = DBManager.get_redis()
@@ -53,8 +56,11 @@ class DataManager:
         """
         # Get article key from redis
         article_key = cls.db.hgetall(article.article_key)["article_key"]
-        # Update article
-        result = cls.db.hset(article_key, "entities", json.dumps(article.entities))
+        current_entity = cls.db.hget(article_key, "entities")
+        update_entity = list(set(json.loads(current_entity) + article.entities))
+
+        # Update entity list
+        result = cls.db.hset(article_key, "entities", json.dumps(update_entity))
 
     @classmethod
     def update_entity_by_article(cls, article):
@@ -73,7 +79,7 @@ class DataManager:
             # Update articles list
             if given_entity != None:
                 given_entity.articles.append(article.article_key.replace("article:", ""))
-                result = cls.db.hset(entity_key, "articles", json.dumps(given_entity.articles))
+                result = cls.db.hset(entity_key, "articles", json.dumps(list(set(given_entity.articles))))
 
     @classmethod
     def is_article_duplicate(cls, article):
@@ -219,4 +225,16 @@ class DataManager:
             if key % 10 == 0: print(str(key) + "/" + str(entity_count) + " 번째 데이터 처리 중")
             entity_key = "entity:" + str(key)
             hashmap = db.delete(entity_key)
-        
+
+    @classmethod
+    def remain_token(cls, token, confidence=0.1, lang='en'):
+        payload = {
+            'token': token,
+            'url': "https://arstechnica.com/?p=1251149",
+            'confidence': confidence,
+            'lang': lang,
+        }
+                        
+        response = requests.get(Config.dandelion_url, params=payload)
+        remain_token = response.headers["X-DL-units-left"] 
+        return remain_token
