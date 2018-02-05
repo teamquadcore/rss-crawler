@@ -169,6 +169,13 @@ class DataManager:
         Fetch count of articles.
         """
         return int(cls.db.get("article_count"))
+    
+    @classmethod
+    def get_article_start_count(cls):
+        """
+        Fetch count of start article count.
+        """
+        return int(cls.db.get("article_start_count"))
 
     @classmethod
     def set_entity_count(cls, count):
@@ -185,6 +192,13 @@ class DataManager:
         NOTE: this attribute should be increased automatically.
         """
         return cls.db.set("article_count", count)
+    
+    @classmethod
+    def set_article_start_count(cls, count):
+        """
+        Set count of start article manually.
+        """
+        return cls.db.set("article_start_count", count)
 
     @classmethod
     def delete_article(cls, key):
@@ -207,10 +221,9 @@ class DataManager:
         """
         Delete all articles.
         """
-        article_count = int(db.get("article_count"))
+        article_count = int(cls.db.get("article_count"))
 
         for key in range(1, article_count + 1): 
-            if key % 10 == 0: print(str(key) + "/" + str(article_count) + " 번째 데이터 처리 중")
             article_key = "article:" + str(key)
             hashmap = db.delete(article_key)
 
@@ -219,10 +232,9 @@ class DataManager:
         """
         Delete all entities.
         """
-        entity_count = int(db.get("entity_count"))
+        entity_count = int(cls.db.get("entity_count"))
 
         for key in range(1, entity_count + 1): 
-            if key % 10 == 0: print(str(key) + "/" + str(entity_count) + " 번째 데이터 처리 중")
             entity_key = "entity:" + str(key)
             hashmap = db.delete(entity_key)
 
@@ -237,4 +249,56 @@ class DataManager:
                         
         response = requests.get(Config.dandelion_url, params=payload)
         remain_token = response.headers["X-DL-units-left"] 
-        return remain_token
+        return remain_token        
+
+    @classmethod
+    def reconnect_article():
+        """
+        Delete article_map and create new article_map.
+        """
+        db = DBManager.get_redis()
+        article_count = dm.get_article_count()
+        
+        db.delete("article_map")
+
+        for key in range(1, article_count+1):
+            article_link = dm.get_article_by_key(str(key)).link
+            db.hset("article_map", article_link, "1")
+
+    @classmethod
+    def reconnect_entity():
+        """
+        Delete entity_map and create new entity_map.
+        """
+        db = DBManager.get_redis()
+        entity_count = dm.get_entity_count()
+        
+        db.delete("entity_map")
+
+        for key in range(1, entity_count+1):
+            entity = dm.get_entity_by_key(key)
+            db.hset("entity_map", entity.entity_id, key)
+
+    @classmethod
+    def disconnect_article():
+        """
+        Remove entities in article.
+        """
+        db = DBManager.get_redis()
+        article_count = dm.get_article_count()
+
+        for i in range(1, article_count + 1): 
+            article_key = "article:" + str(i)
+            hashmap = db.hset(article_key, "entities", "[]")
+
+    @classmethod
+    def disconnect_entity():
+        """
+        Remove articles in entity.
+        """
+        db = DBManager.get_redis()
+        entity_count = dm.get_entity_count()
+
+        for i in range(1, entity_count + 1): 
+            entity_key = "entity:" + str(i)
+            hashmap = db.hset(entity_key, "articles", "[]")

@@ -123,80 +123,32 @@ def extract_article():
     """
     Extract entity from article and two-way relationship between articles and entities.
     """
-    db = DBManager.get_redis()
+    slack_alert("*Extract article started!\n>")
 
-    article_count = dm.get_article_count()    
+    article_start_count = dm.get_article_start_count()
+    article_count = dm.get_article_count()        
     token_list = Config.dandelion_token.split("#")
-    key = 1
     whos = 0
+
+    if article_start_count >= article_count:
+        return    
     
     for token in token_list:
         remain_token = int(dm.remain_token(token))
+        if remain_token == 0:
+            continue
         for i in range(1, int(remain_token/2)+1):
-            print(Config.dandelion_who[whos] + ": " + str(key) + "th data is processing...")
-            article = dm.get_article_by_key(key)               
+            article = dm.get_article_by_key(article_start_count)               
             if article != None:
                 article_entity = Extractor(article, token)
-            if article_count == key:
+            if article_count == article_start_count:
+                dm.set_article_start_count(int(article_count+1))
                 return
-            key += 1 
-        whos += 1 
+            article_start_count += 1
+        slack_alert(str(Config.dandelion_who[whos])+"\'s token is exhausted\n") 
+        whos += 1
 
-@manager.command
-def reconnect_article():
-    """
-    Delete article_map and create new article_map.
-    """
-    db = DBManager.get_redis()
-    article_count = dm.get_article_count()
-    
-    db.delete("article_map")
-
-    for key in range(1, article_count+1):
-        article_link = dm.get_article_by_key(str(key)).link
-        db.hset("article_map", article_link, "1")
-
-@manager.command
-def reconnect_entity():
-    """
-    Delete entity_map and create new entity_map.
-    """
-    db = DBManager.get_redis()
-    entity_count = dm.get_entity_count()
-    
-    db.delete("entity_map")
-
-    for key in range(1, entity_count+1):
-        entity = dm.get_entity_by_key(key)
-        db.hset("entity_map", entity.entity_id, key)
-
-@manager.command
-def disconnect_article():
-    """
-    Remove entities in article.
-    """
-    db = DBManager.get_redis()
-    article_count = dm.get_article_count()
-
-    print("[+] Article->Entity remove a connetion")
-    for i in range(1, article_count + 1): 
-        if i % 10 == 0: print(str(i) + "/" + str(article_count) + " 번째 데이터 처리 중")
-        article_key = "article:" + str(i)
-        hashmap = db.hset(article_key, "entities", "[]")
-
-@manager.command
-def disconnect_entity():
-    """
-    Remove articles in entity.
-    """
-    db = DBManager.get_redis()
-    entity_count = dm.get_entity_count()
-
-    print("[+] Entity->Article remove a connetion")
-    for i in range(1, entity_count + 1): 
-        if i % 50 == 0: print(str(i) + "/" + str(entity_count) + " 번째 데이터 처리 중")
-        entity_key = "entity:" + str(i)
-        hashmap = db.hset(entity_key, "articles", "[]")
+    slack_alert("*Extract article finished!\n")
 
 if __name__ == '__main__':
     manager.main()

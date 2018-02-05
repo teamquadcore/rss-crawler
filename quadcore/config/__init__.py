@@ -61,8 +61,8 @@ class Config:
    
     # Wiki category
     wiki_category = [
-        "Computing",
-        "Company"
+        #"Computing",
+        #"Company"
         #"Computer_Security",
         #"Computer_Vision",
         #"Computer_animation"
