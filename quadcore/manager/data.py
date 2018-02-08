@@ -246,9 +246,10 @@ class DataManager:
             'confidence': confidence,
             'lang': lang,
         }
-                        
+        remain_token = -1
         response = requests.get(Config.dandelion_url, params=payload)
-        remain_token = response.headers["X-DL-units-left"] 
+        if "error" not in response:
+            remain_token = response.headers["X-DL-units-left"] 
         return remain_token        
 
     @classmethod
