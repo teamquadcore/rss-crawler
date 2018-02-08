@@ -136,10 +136,12 @@ def extract_article():
     for token in token_list:
         remain_token = int(dm.remain_token(token))
         if remain_token <= 0:
+            slack_alert(str(Config.dandelion_who[whos])+" token is exhausted.") 
+            whos += 1
             continue
         for i in range(1, int(remain_token/2)+1):
             if i % 10 == 0: 
-                slack_alert(str(Config.dandelion_who[whos]) + "'s remain token: " + str(i))
+                slack_alert(str(Config.dandelion_who[whos]) + " remain token: " + str(i))
             article = dm.get_article_by_key(article_start_count)               
             if article != None:
                 article_entity = Extractor(article, token)
@@ -148,7 +150,7 @@ def extract_article():
                 slack_alert("*Extract article* finished!")
                 return
             article_start_count += 1
-        slack_alert(str(Config.dandelion_who[whos])+"'s token is exhausted.") 
+        
         whos += 1
 
 if __name__ == '__main__':

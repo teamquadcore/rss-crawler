@@ -34,9 +34,10 @@ class Extractor:
     @classmethod
     def get_category_list(cls, data):
         category_list = list()
-
-        for annotation in data['annotations']:
-            category_list.append(annotation["id"])
+        
+        if "annotations" in data:
+            for annotation in data['annotations']:
+                category_list.append(annotation["id"])
         
         return category_list
     
