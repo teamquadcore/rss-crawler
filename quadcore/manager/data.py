@@ -248,8 +248,9 @@ class DataManager:
         }
         remain_token = -1
         response = requests.get(Config.dandelion_url, params=payload)
-        if "error" not in response:
+        if response.status_code == 200:
             remain_token = response.headers["X-DL-units-left"] 
+        
         return remain_token        
 
     @classmethod

@@ -123,7 +123,7 @@ def extract_article():
     """
     Extract entity from article and two-way relationship between articles and entities.
     """
-    slack_alert("*Extract article* started!\n>")
+    slack_alert("*Extract article* started!")
 
     article_start_count = dm.get_article_start_count()
     article_count = dm.get_article_count()        
@@ -138,17 +138,17 @@ def extract_article():
         if remain_token <= 0:
             continue
         for i in range(1, int(remain_token/2)+1):
-            if i % 50 == 0 : 
-                slack_alert(str(Config.dandelion_who[whos]) + "\'s remain token: " + str(i))
+            if i % 10 == 0: 
+                slack_alert(str(Config.dandelion_who[whos]) + "'s remain token: " + str(i))
             article = dm.get_article_by_key(article_start_count)               
             if article != None:
                 article_entity = Extractor(article, token)
             if article_count == article_start_count:
                 dm.set_article_start_count(int(article_count+1))
-                slack_alert("*Extract article* finished!\n")
+                slack_alert("*Extract article* finished!")
                 return
             article_start_count += 1
-        slack_alert(str(Config.dandelion_who[whos])+"\'s token is exhausted\n") 
+        slack_alert(str(Config.dandelion_who[whos])+"'s token is exhausted.") 
         whos += 1
 
 if __name__ == '__main__':
