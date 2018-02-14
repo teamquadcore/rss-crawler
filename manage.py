@@ -140,8 +140,6 @@ def extract_article():
             whos += 1
             continue
         for i in range(1, int(remain_token/2)+1):
-            if i % 10 == 0: 
-                slack_alert(str(Config.dandelion_who[whos]) + " remain token: " + str(i))
             article = dm.get_article_by_key(article_start_count)               
             if article != None:
                 article_entity = Extractor(article, token)

@@ -254,52 +254,52 @@ class DataManager:
         return remain_token        
 
     @classmethod
-    def reconnect_article():
+    def reconnect_article(cls):
         """
         Delete article_map and create new article_map.
         """
         db = DBManager.get_redis()
-        article_count = dm.get_article_count()
+        article_count = cls.get_article_count()
         
         db.delete("article_map")
 
         for key in range(1, article_count+1):
-            article_link = dm.get_article_by_key(str(key)).link
+            article_link = cls.get_article_by_key(str(key)).link
             db.hset("article_map", article_link, "1")
 
     @classmethod
-    def reconnect_entity():
+    def reconnect_entity(cls):
         """
         Delete entity_map and create new entity_map.
         """
         db = DBManager.get_redis()
-        entity_count = dm.get_entity_count()
+        entity_count = cls.get_entity_count()
         
         db.delete("entity_map")
 
         for key in range(1, entity_count+1):
-            entity = dm.get_entity_by_key(key)
+            entity = cls.get_entity_by_key(key)
             db.hset("entity_map", entity.entity_id, key)
 
     @classmethod
-    def disconnect_article():
+    def disconnect_article(cls):
         """
         Remove entities in article.
         """
         db = DBManager.get_redis()
-        article_count = dm.get_article_count()
+        article_count = cls.get_article_count()
 
         for i in range(1, article_count + 1): 
             article_key = "article:" + str(i)
             hashmap = db.hset(article_key, "entities", "[]")
 
     @classmethod
-    def disconnect_entity():
+    def disconnect_entity(cls):
         """
         Remove articles in entity.
         """
         db = DBManager.get_redis()
-        entity_count = dm.get_entity_count()
+        entity_count = cls.get_entity_count()
 
         for i in range(1, entity_count + 1): 
             entity_key = "entity:" + str(i)
