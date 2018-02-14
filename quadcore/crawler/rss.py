@@ -23,7 +23,6 @@ class RSSCrawler(Crawler):
     def extract(cls, objs, code, options):
         """
         Extract news from feedparser object.
-        # TODO Need to remove needless texts from content like 'Read more'
         """
         feed = objs[0]
         ret = list()
@@ -52,3 +51,4 @@ class RSSCrawler(Crawler):
 
             ret.append(article)
         return ret
+        

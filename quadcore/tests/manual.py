@@ -30,3 +30,4 @@ class ManualTest:
             dm.set_entity_count(curr_entity))
         print("[+] Checking article count set (True) =", 
             dm.set_article_count(curr_article))
+            

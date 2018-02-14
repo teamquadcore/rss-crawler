@@ -49,7 +49,6 @@ class WikipediaCrawler(Crawler):
         """
         Extract WikipediaID and WikipediaTitle
         Make Wikipedia dictionary
-        @TODO Refine title and apply classify algorithm
         """
         extract_entity = dict()
         for obj in objs:

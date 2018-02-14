@@ -30,7 +30,6 @@ class Extractor:
         
         return category_list
 
-    # Get category list
     @classmethod
     def get_category_list(cls, data):
         category_list = list()
@@ -48,8 +47,4 @@ class Extractor:
         # Set articles to redis
         dm.update_article(obj)
         dm.update_entity_by_article(obj)
-
-
         
-
-
