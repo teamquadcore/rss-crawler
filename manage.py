@@ -74,7 +74,6 @@ def crawl_article():
     db = DBManager.get_redis()
     slack_alert("*News Crawling* started!\n")
 
-    # TODO(@harrydrippin): Crawl for all newspapers after enough tokens, keying newspapers by some ID
     for newspaper in Config.rss_links:
         articles = RSSCrawler(newspaper)
         
@@ -153,3 +152,4 @@ def extract_article():
 
 if __name__ == '__main__':
     manager.main()
+    

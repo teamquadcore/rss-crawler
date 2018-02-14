@@ -58,16 +58,4 @@ class Config:
     req_header = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36'
     }
-   
-    # Wiki category
-    wiki_category = [
-        #"Computing",
-        #"Company"
-        #"Computer_Security",
-        #"Computer_Vision",
-        #"Computer_animation"
-        #"Computer_graphics"
-        #"Computer_hardware",
-        #"Computer_networking",
-        #"Computer_science"
-    ]
+    

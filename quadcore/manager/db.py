@@ -12,3 +12,4 @@ class DBManager:
     def get_redis(cls):
         if cls.__redis_store == None: cls.__init_redis()
         return cls.__redis_store
+        

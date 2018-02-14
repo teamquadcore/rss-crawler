@@ -48,3 +48,4 @@ class Crawler:
         
         clean_text = whitespace.sub(" ", ltgt.sub("", raw_html)).replace("\n", " ")
         return clean_text
+        
