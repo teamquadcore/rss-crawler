@@ -16,40 +16,41 @@ class Config:
     # Dandelion API
     dandelion_url = 'https://api.dandelion.eu/datatxt/nex/v1'
     dandelion_token = os.environ.get("DANDELION_TOKEN")
+    dandelion_who = ["Henry", "Zoey", "Roy", "Harry"]
 
     # Wiki Url
     wiki_url = "https://tools.wmflabs.org/enwp10/cgi-bin/list2.fcgi?run=yes&projecta=%s&limit=1000&offset=%d&sorta=Article+title&sortb=Quality"
 
     # RSS feed links
-    rss_links = {
-        "ArsTechnica": "http://feeds.arstechnica.com/arstechnica/technology-lab",
+    rss_links = {       
+        "Ars Technica": "http://feeds.arstechnica.com/arstechnica/technology-lab",
         "Barron’s": "http://blogs.barrons.com/techtraderdaily/feed/",
-        "BBCNews": "http://feeds.bbci.co.uk/news/technology/rss.xml",
-        "BusinessInsider": "http://feeds.feedburner.com/typepad/alleyinsider/silicon_alley_insider",
+        "BBC News": "http://feeds.bbci.co.uk/news/technology/rss.xml",
+        "Business Insider": "http://feeds.feedburner.com/typepad/alleyinsider/silicon_alley_insider",
         "CNET": "http://www.cnet.com/rss/news",
         "Computerworld": "http://www.computerworld.com/index.rss",
-        "DailyExpress": "http://feeds.feedburner.com/daily-express-tech",
+        "Daily Express": "http://feeds.feedburner.com/daily-express-tech",
         "Engadget": "https://www.engadget.com/rss.xml",
-        "FreeTechnologyforTeachers": "http://feeds.feedblitz.com/freetech4teachers",
-        "HowToGeek": "http://feeds.howtogeek.com/HowToGeek",
-        "HuffingtonPost": "http://www.huffingtonpost.com/feeds/verticals/technology/index.xml",
+        "Free Technology for Teachers": "http://feeds.feedblitz.com/freetech4teachers",
+        "How To Geek": "http://feeds.howtogeek.com/HowToGeek",
+        "Huffington Post": "http://www.huffingtonpost.com/feeds/verticals/technology/index.xml",
         "LifeHacker": "https://lifehacker.com/rss",
-        "LosAngelesTimes": "http://www.latimes.com/business/technology/rss2.0.xml",
+        "Los Angeles Times": "http://www.latimes.com/business/technology/rss2.0.xml",
         "MakeUseOf": "http://feeds.feedburner.com/Makeuseof",
         "Mirror": "http://www.mirror.co.uk/tech/rss.xml",
-        "MITTechnologyReview": "https://www.technologyreview.com/topnews.rss",
+        "MIT Technology Review": "https://www.technologyreview.com/topnews.rss",
         "ReadWrite: Smart Cities": "http://feeds.feedburner.com/SmartCitiesReadwrite",
         "Recode": "http://www.recode.net/rss/index.xml",
         "Reddit": "http://www.reddit.com/r/technology/.rss",
         "Reuters": "http://feeds.reuters.com/reuters/technologyNews",
         "Techmeme": "https://www.techmeme.com/feed.xml",
         "TechCrunch": "http://feeds.feedburner.com/TechCrunch",
-        "TheAtlantic": "http://www.theatlantic.com/feed/channel/technology",
-        "TheNewYorkTimes": "http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
-        "TheWashingtonPost": "http://feeds.washingtonpost.com/rss/business/technology",
-        "TheVerge": "https://www.theverge.com/rss/index.xml",
+        "The Atlantic": "http://www.theatlantic.com/feed/channel/technology",
+        "The New York Times": "http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
+        "The Washington Post": "http://feeds.washingtonpost.com/rss/business/technology",
+        "The Verge": "https://www.theverge.com/rss/index.xml",
         "VentureBeat": "http://feeds.feedburner.com/venturebeat/SZYF",        
-        "Wired": "https://www.wired.com/feed/rss"        
+        "Wired": "https://www.wired.com/feed/rss"
     }
 
     # Header information for yielding User-Agent validation
@@ -60,13 +61,13 @@ class Config:
    
     # Wiki category
     wiki_category = [
-        "Computing",
-        "Company",
-        "Computer_Security",
-        "Computer_Vision",
-        "Computer_animation",
-        "Computer_graphics",
-        "Computer_hardware",
-        "Computer_networking",
-        "Computer_science"
+        #"Computing",
+        #"Company"
+        #"Computer_Security",
+        #"Computer_Vision",
+        #"Computer_animation"
+        #"Computer_graphics"
+        #"Computer_hardware",
+        #"Computer_networking",
+        #"Computer_science"
     ]

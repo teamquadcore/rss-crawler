@@ -32,6 +32,7 @@ class Article:
         self.published = kwargs["published"]
         self.content = kwargs["content"]
         self.author = kwargs["author"]
+        self.thumbnail = kwargs["thumbnail"]
 
         # Lists
         self.category = kwargs["category"]
@@ -47,6 +48,7 @@ class Article:
             published=resp["published"],
             content=resp["content"],
             author=resp["author"],
+            thumbnail=resp["thumbnail"],
             category=resp["category"],
             entities=resp["entities"]
         )
@@ -63,6 +65,7 @@ class Article:
             "published": self.published,
             "content": self.content,
             "author": self.author,
+            "thumbnail": self.thumbnail,
             # Due to redis hash structure, 
             # only string will be accepted
             "category": json.dumps(self.category),

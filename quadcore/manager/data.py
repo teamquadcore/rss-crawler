@@ -1,6 +1,9 @@
+from quadcore.config import Config
 from quadcore.manager.db import DBManager
 from quadcore.models import Article, Entity
+
 import json
+import requests
 
 class DataManager:
     db = DBManager.get_redis()
@@ -47,6 +50,19 @@ class DataManager:
         return result
 
     @classmethod
+    def update_article(cls, article):
+        """
+        Insert entities to article.
+        """
+        # Get article key from redis
+        article_key = cls.db.hgetall(article.article_key)["article_key"]
+        current_entity = cls.db.hget(article_key, "entities")
+        update_entity = list(set(json.loads(current_entity) + article.entities))
+
+        # Update entity list
+        result = cls.db.hset(article_key, "entities", json.dumps(update_entity))
+
+    @classmethod
     def update_entity_by_article(cls, article):
         """
         Update each entity's articles list based on article.
@@ -63,7 +79,7 @@ class DataManager:
             # Update articles list
             if given_entity != None:
                 given_entity.articles.append(article.article_key.replace("article:", ""))
-                result = cls.db.hset(entity_key, "articles", json.dumps(given_entity.articles))
+                result = cls.db.hset(entity_key, "articles", json.dumps(list(set(given_entity.articles))))
 
     @classmethod
     def is_article_duplicate(cls, article):
@@ -153,6 +169,13 @@ class DataManager:
         Fetch count of articles.
         """
         return int(cls.db.get("article_count"))
+    
+    @classmethod
+    def get_article_start_count(cls):
+        """
+        Fetch count of start article count.
+        """
+        return int(cls.db.get("article_start_count"))
 
     @classmethod
     def set_entity_count(cls, count):
@@ -169,3 +192,115 @@ class DataManager:
         NOTE: this attribute should be increased automatically.
         """
         return cls.db.set("article_count", count)
+    
+    @classmethod
+    def set_article_start_count(cls, count):
+        """
+        Set count of start article manually.
+        """
+        return cls.db.set("article_start_count", count)
+
+    @classmethod
+    def delete_article(cls, key):
+        """
+        Delete a certain article.
+        """
+        article_key = "article:" + str(key)
+        hashmap = db.delete(article_key)
+
+    @classmethod
+    def delete_entity(cls, key):
+        """
+        Delete a certain entity.
+        """
+        entity_key = "entity:" + str(key)
+        hashmap = db.delete(entity_key)
+    
+    @classmethod
+    def delete_all_article(cls):
+        """
+        Delete all articles.
+        """
+        article_count = int(cls.db.get("article_count"))
+
+        for key in range(1, article_count + 1): 
+            article_key = "article:" + str(key)
+            hashmap = db.delete(article_key)
+
+    @classmethod
+    def delete_all_entity(cls):
+        """
+        Delete all entities.
+        """
+        entity_count = int(cls.db.get("entity_count"))
+
+        for key in range(1, entity_count + 1): 
+            entity_key = "entity:" + str(key)
+            hashmap = db.delete(entity_key)
+
+    @classmethod
+    def remain_token(cls, token, confidence=0.1, lang='en'):
+        payload = {
+            'token': token,
+            'url': "https://arstechnica.com/?p=1251149",
+            'confidence': confidence,
+            'lang': lang,
+        }
+        remain_token = -1
+        response = requests.get(Config.dandelion_url, params=payload)
+        if response.status_code == 200:
+            remain_token = response.headers["X-DL-units-left"] 
+        
+        return remain_token        
+
+    @classmethod
+    def reconnect_article(cls):
+        """
+        Delete article_map and create new article_map.
+        """
+        db = DBManager.get_redis()
+        article_count = cls.get_article_count()
+        
+        db.delete("article_map")
+
+        for key in range(1, article_count+1):
+            article_link = cls.get_article_by_key(str(key)).link
+            db.hset("article_map", article_link, "1")
+
+    @classmethod
+    def reconnect_entity(cls):
+        """
+        Delete entity_map and create new entity_map.
+        """
+        db = DBManager.get_redis()
+        entity_count = cls.get_entity_count()
+        
+        db.delete("entity_map")
+
+        for key in range(1, entity_count+1):
+            entity = cls.get_entity_by_key(key)
+            db.hset("entity_map", entity.entity_id, key)
+
+    @classmethod
+    def disconnect_article(cls):
+        """
+        Remove entities in article.
+        """
+        db = DBManager.get_redis()
+        article_count = cls.get_article_count()
+
+        for i in range(1, article_count + 1): 
+            article_key = "article:" + str(i)
+            hashmap = db.hset(article_key, "entities", "[]")
+
+    @classmethod
+    def disconnect_entity(cls):
+        """
+        Remove articles in entity.
+        """
+        db = DBManager.get_redis()
+        entity_count = cls.get_entity_count()
+
+        for i in range(1, entity_count + 1): 
+            entity_key = "entity:" + str(i)
+            hashmap = db.hset(entity_key, "articles", "[]")

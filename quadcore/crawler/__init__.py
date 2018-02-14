@@ -1,6 +1,8 @@
 import feedparser
 import requests
+import re
 
+from bs4 import BeautifulSoup
 from quadcore.config import Config
 
 class Crawler:
@@ -26,7 +28,7 @@ class Crawler:
         data_objects = list()
         for source in sources:
             resp = requests.get(source, headers=Config.req_header)
-            if options["mode"] == "feed": 
+            if options["mode"] == "feed":
                 data_objects.append(feedparser.parse(resp.text))
             elif options["mode"] == "html": 
                 data_objects.append(BeautifulSoup(resp.text, "lxml"))
@@ -41,6 +43,8 @@ class Crawler:
         """
         Utility function for replace HTML tags from string.
         """
-        cleanr = re.compile('<.*?>')
-        clean_text = re.sub(cleanr, '', raw_html)
+        ltgt = re.compile('<.*?>')
+        whitespace = re.compile('\s+')
+        
+        clean_text = whitespace.sub(" ", ltgt.sub("", raw_html)).replace("\n", " ")
         return clean_text
